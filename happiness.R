@@ -1,9 +1,8 @@
-setwd("C:/Users/Kanishka/happiness/")
+# setwd("C:/Users/Kanishka/happiness/")
+setwd("happiness/")
 library(tidyverse)
 library(kani)
 library(extrafont)
-library(twidlr)
-library(broom)
 
 happiness_2015 <- read.csv("data/2015.csv") %>% mutate(year = "2015")
 happiness_2016 <- read.csv("data/2016.csv") %>% mutate(year = "2016")
@@ -22,7 +21,7 @@ happiness_2015_16 %>%
   labs(y = "Happiness Score") + 
   scale_y_continuous(limits = c(4,8))
 
-countries <- happiness_2015 %>%
+countries_14_15 <- happiness_2015 %>%
   select(Country, Region, Happiness.Score) %>%
   inner_join(happiness_2016 %>% select(Country, Happiness.Score), by = "Country") %>%
   mutate(score_2015 = Happiness.Score.x,
@@ -88,11 +87,11 @@ regional_differences %>%
   labs(title = "Regional Change in Happiness from 2015 to 2016")
 
 
-happier <- countries %>%
+happier <- countries_14_15 %>%
   top_n(10, difference) %>%
   arrange(desc(difference))
 
-sadder <- countries %>%
+sadder <- countries_14_15 %>%
   top_n(10, -difference) %>%
   arrange(-difference)
 
@@ -106,20 +105,20 @@ top_10_plot <- top_10 %>%
   geom_point(size = 3) +
   geom_point(size = 5.5, alpha = 0.4) +
   geom_hline(yintercept = 0, lty = 1, size = 1) + 
-  geom_text(aes(x = "Sudan", y = 0.5), label = "Happier in 2016 than\nthey were in 2015", color = light_blue, size = 5, family = "Roboto", fontface = 2) + 
-  geom_text(aes(x = "Hungary", y = -0.5), label = "Sadder in 2016 than\nthey were in 2015", color = light_red, size = 5, family = "Roboto", fontface = 2) + 
+  geom_text(aes(x = "Sudan", y = 0.5), label = "Happier in 2015 than\nthey were in 2014", color = light_blue, size = 5, family = "Roboto", fontface = 2) + 
+  geom_text(aes(x = "Hungary", y = -0.5), label = "Unhappier in 2015 than\nthey were in 2014", color = light_red, size = 5, family = "Roboto", fontface = 2) + 
   coord_flip() +
   scale_color_manual(values = c(light_blue, light_red)) +
   scale_y_continuous(breaks = seq(-1,1.25, by = 0.25), limits = c(-1,1)) + 
   theme_kani() + 
-  labs(title = "Top 10 happier/sadder countries from 2015 to 2016", 
+  labs(title = "Top 10 happier/sadder countries from 2014 to 2015", 
        subtitle = "Shows difference in Happiness Scores calculated\nby the World Happiness Report in 2015 and 2016",
        y = "Difference in Happiness Score",
        caption = "By Kanishka Misra\nData Source: Kaggle"
       ) + 
   theme(legend.position = "None")
 top_10_plot
-ggsave("plot_test2.png", top_10_plot, height = 9, width = 15)
+ggsave("2014to2015.png", top_10_plot, height = 9, width = 15)
 
 
 
